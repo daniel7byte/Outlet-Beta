@@ -1,0 +1,49 @@
+html {
+	height: 100%;
+	margin-top: 0px;
+	padding: 0px;
+	/*height: 95%; margin-top: 0px; padding: 0px;*/
+}
+
+body {
+	height: 100%;
+	margin-top: 0px;
+	padding: 0px;
+	/*height: 95%; margin-top: 0px; padding: 0px;*/
+	display: flex;
+}
+
+#map {
+	width: 100%;
+	height: -moz-calc(100% - 60px);
+    height: -webkit-calc(100% - 60px);
+    height: calc(100% - 60px);
+    /*height: 100%*/
+    margin-top: 60px;
+
+	/*AQUI PARA BARRA PRO*/
+    z-index: 0;
+}
+
+.navOptionsRow {
+	padding-top: 4px;
+	padding-left: 4px;
+	background: rgba(0, 0, 0, 0);
+	position: absolute;
+	top: 60px;
+
+	/*AQUI PARA BARRA PRO*/
+    width: 100%;
+    padding-left: 0px;
+    padding-bottom: 4px;
+    right: 0px;
+    margin-right: 0px;
+    left: 15px;
+    background: rgba(0,0,0,0.1);
+    z-index: 1;
+}
+
+/*AQUI PARA BARRA PRO*/
+.navOptionsCol {
+	padding-left: 4px;
+}

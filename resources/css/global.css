@@ -1,0 +1,12 @@
+/*background-color: #45ae37;*/
+.navbar{
+	margin-bottom: 0px;
+	border-radius: 0px;
+}
+.navOptions{
+	z-index: 2;
+}
+
+.selectpicker {
+	width: 33%;
+}

@@ -1,0 +1,15 @@
+{
+  "name": "Outlet",
+  "authors": [
+    "Jose Daniel Posso Garcia <daniel7byte@gmail.com>"
+  ],
+  "description": "",
+  "license": "MIT",
+  "dependencies": {
+    "gmaps": "^0.4.24",
+    "bootstrap": "^3.3.7",
+    "markerclustererplus": "^2.1.4",
+    "bootstrap-select": "^1.11.2",
+    "js-cookie": "^2.1.3"
+  }
+}
