@@ -18,7 +18,8 @@ body {
 	height: -moz-calc(100% - 60px);
     height: -webkit-calc(100% - 60px);
     height: calc(100% - 60px);
-    /*height: 100%*/
+    /*height: 1000px;*/
+    /*max-height: 1500px;*/
     margin-top: 60px;
 
 	/*AQUI PARA BARRA PRO*/

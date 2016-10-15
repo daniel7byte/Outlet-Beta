@@ -45,9 +45,9 @@
           lng: -76.53333,
           zoom: 16,
           styles: styleArray,
-          // markerClusterer: function(map) {
-          //   return new MarkerClusterer(map);
-          // },
+          markerClusterer: function(map) {
+            return new MarkerClusterer(map);
+          },
           mapTypeControl: true,
           mapTypeControlOptions: {
             style: google.maps.MapTypeControlStyle.BOTTOM_LEFT,
@@ -125,19 +125,23 @@
         };
 
         <?php
-          $query = $mysql->prepare('SELECT id, titulo, nombreEmpresa, categoria, direccion, latitud, longitud, SQRT(POW(69.1 * (latitud - :lat), 2) + POW(69.1 * (:lng - longitud) * COS(latitud / 57.3), 2)) AS distance FROM sucursales HAVING distance < :range');
+          $query = $mysql->prepare("SELECT id, titulo, nombreEmpresa, categoria, direccion, latitud, longitud, SQRT(POW(69.1 * (latitud - :lat), 2) + POW(69.1 * (:lng - longitud) * COS(latitud / 57.3), 2)) AS distance FROM sucursales WHERE categoria LIKE :cat HAVING distance < :range");
+
+          // WHERE categoria = ":cat"
           
-          if(isset($_COOKIE['lat']) AND isset($_COOKIE['lng']) AND isset($_GET['range']) AND !empty($_GET['range'])){
+          if(isset($_COOKIE['lat']) AND isset($_COOKIE['lng']) AND isset($_GET['range']) AND !empty($_GET['range']) AND isset($_GET['cat'])){
             $arrayQuery = array(
               ':lat' => $_COOKIE['lat'],
               ':lng' => $_COOKIE['lng'],
-              ':range' => $_GET['range']
+              ':range' => $_GET['range'],
+              ':cat' => $_GET['cat']
             );
           }else{
             $arrayQuery = array(
               ':lat' => 3.4227857999999998,
               ':lng' => -76.55079080000002,
-              ':range' => 0.310686
+              ':range' => 0.310686,
+              ':cat' => '%'
             );
           }
 
@@ -166,7 +170,7 @@
             }
           ?>
           infoWindow: {
-            content: '<h1><?=$data['titulo']?></h1><br><h2><?=$data['nombreEmpresa']?></h2><br><h3><?=$data['categoria']?></h3>'
+            content: '<p><?=$data['titulo']?></p><p><?=$data['nombreEmpresa']?></p><p><?=$data['categoria']?></p><a class="btn btn-success btn-sm" href="cupon.php?id=<?=$data['id']?>">MAS DETALLES</a>'
           }
         });
       
@@ -234,22 +238,21 @@
           <option selected="selected" disabled="disabled">Distancia (500 mts)</option>
         <?php endif; ?>
 
-        <option value="?range=0.3">500 Metros</option>
-        <option value="?range=0.6">1 Kilometro</option>
-        <option value="?range=3.1">5 Kilometros</option>
-        <option value="?range=6.2">10 Kilometros</option>
+      <?php if(isset($_GET['cat']) AND !empty($_GET['cat'])): ?>
+        <option value="index.php?cat=<?=$_GET['cat']?>&range=0.3">500 Metros</option>
+        <option value="index.php?cat=<?=$_GET['cat']?>&range=0.6">1 Kilometro</option>
+        <option value="index.php?cat=<?=$_GET['cat']?>&range=3.1">5 Kilometros</option>
+        <option value="index.php?cat=<?=$_GET['cat']?>&range=6.2">10 Kilometros</option>
+      <?php else: ?>
+        <option value="index.php?cat=%&range=0.3">500 Metros</option>
+        <option value="index.php?cat=%&range=0.6">1 Kilometro</option>
+        <option value="index.php?cat=%&range=3.1">5 Kilometros</option>
+        <option value="index.php?cat=%&range=6.2">10 Kilometros</option>
+      <?php endif; ?>
+
       </select>
 
-      <!-- <select class="selectpicker" id="">
-        <option value="allCat" selected="selected" disabled="disabled">Categorias</option>
-        <option value="all">Todas</option>
-        <option>Comidas</option>
-        <option>Bancos</option>
-        <option>Salud</option>
-        <option>Ferreterias</option>
-      </select> -->
-
-      <button class="btn btn-warning" href="#!" id="findMe">¡CERCA A MI!</button>
+      <button class="btn btn-warning" href="#!" id="findMe"><span class="glyphicon glyphicon-screenshot"></span></button>
 
       <div class="clearfix"></div>
 
