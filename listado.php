@@ -20,228 +20,136 @@
   <link rel="stylesheet" type="text/css" href="bower_components/bootstrap-select/dist/css/bootstrap-select.min.css">
   <link rel="stylesheet" type="text/css" href="resources/css/global.css">
   <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="resources/css/gmaps.css">
-  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAK6W34CCNplz4LpPN9eOYpCOaJGOYycyU"></script>
-  <script type="text/javascript" src="bower_components/gmaps/gmaps.min.js"></script>
   <script type="text/javascript" src="bower_components/markerclustererplus/dist/markerclusterer.min.js"></script>
   <script type="text/javascript" src="bower_components/js-cookie/src/js.cookie.js"></script>
   <script type="text/javascript">
-    var map;
-    var MyLat;
-    var MyLng;
-    var latlngCenter;
-
+    var latitud;
+    var longitud;
     Cookies.remove('lat');
     Cookies.remove('lng');
-
-    $(document).ready(function(){
-
-      var styleArray = [{"featureType":"landscape","stylers":[{"hue":"#FFA800"},{"saturation":0},{"lightness":0},{"gamma":1}]},{"featureType":"road.highway","stylers":[{"hue":"#53FF00"},{"saturation":-73},{"lightness":40},{"gamma":1}]},{"featureType":"road.arterial","stylers":[{"hue":"#FBFF00"},{"saturation":0},{"lightness":0},{"gamma":1}]},{"featureType":"road.local","stylers":[{"hue":"#00FFFD"},{"saturation":0},{"lightness":30},{"gamma":1}]},{"featureType":"water","stylers":[{"hue":"#00BFFF"},{"saturation":6},{"lightness":8},{"gamma":1}]},{"featureType":"poi","stylers":[{"hue":"#679714"},{"saturation":33.4},{"lightness":-25.4},{"gamma":1}]}];
-
-      function initialize(){
-        map = new GMaps({
-          el: '#map',
-          lat: ﻿3.45000,
-          lng: -76.53333,
-          zoom: 16,
-          styles: styleArray,
-          // markerClusterer: function(map) {
-          //   return new MarkerClusterer(map);
-          // },
-          mapTypeControl: true,
-          mapTypeControlOptions: {
-            style: google.maps.MapTypeControlStyle.BOTTOM_LEFT,
-            position: google.maps.ControlPosition.BOTTOM_CENTER
-          },
-          zoomControl: true,
-          zoomControlOptions: {
-            position: google.maps.ControlPosition.RIGHT_CENTER
-          },
-          scaleControl: true,
-          streetViewControl: true,
-          streetViewControlOptions: {
-            position: google.maps.ControlPosition.RIGHT_BOTTOM
-          }
-        });
-
-        var imageAvatar = {
-          url: 'resources/images/marker/male.png',
-        };
-
-        GMaps.geolocate({
-          success: function(position){
-            map.setCenter(position.coords.latitude, position.coords.longitude);
-            console.log(position.coords.latitude, position.coords.longitude);
-            MyLat = (position.coords.latitude);
-            MyLng = (position.coords.longitude);
-            Cookies.set('lat', position.coords.latitude);
-            Cookies.set('lng', position.coords.longitude);
-
-            // Market de mi ubicacion
-            map.addMarker({
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-              title: 'Mi Ubicacion',
-              icon: imageAvatar,
-              // icon: {
-              //   url: 'http://maps.gstatic.com/mapfiles/circle.png',
-              //   anchor: new google.maps.Point(10, 10),
-              //   scaledSize: new google.maps.Size(10, 17)
-              // },
-              infoWindow: {
-                content: 'Mi Ubicacion'
-              }
-            });
-          },
-          error: function(error){
-            console.log('Geolocation failed: '+error.message);
-          },
-          not_supported: function(){
-            console.log("Your browser does not support geolocation");
-          },
-          always: function(){
-            console.log("Done!");
-          }
-        });
-
-        var imgCuponComidas = {
-          url: 'resources/images/marker/fastfood.png',
-        };
-
-        var imgCuponBancos = {
-          url: 'resources/images/marker/place-to-stay.png',
-        };
-
-        var imgCuponSalud = {
-          url: 'resources/images/marker/farmacia.png',
-        };
-
-        var imgCuponFerreterias = {
-          url: 'resources/images/marker/theme-park.png',
-        };
-
-        var imgCuponOtros = {
-          url: 'resources/images/marker/cupon.png',
-        };
-
-        <?php
-          $query = $mysql->prepare('SELECT id, titulo, nombreEmpresa, categoria, direccion, latitud, longitud, SQRT(POW(69.1 * (latitud - :lat), 2) + POW(69.1 * (:lng - longitud) * COS(latitud / 57.3), 2)) AS distance FROM sucursales HAVING distance < :range');
-          
-          if(isset($_COOKIE['lat']) AND isset($_COOKIE['lng']) AND isset($_GET['range']) AND !empty($_GET['range'])){
-            $arrayQuery = array(
-              ':lat' => $_COOKIE['lat'],
-              ':lng' => $_COOKIE['lng'],
-              ':range' => $_GET['range']
-            );
-          }else{
-            $arrayQuery = array(
-              ':lat' => 3.4227857999999998,
-              ':lng' => -76.55079080000002,
-              ':range' => 0.310686
-            );
-          }
-
-          $query->execute($arrayQuery);
-
-          $result = $query->fetchAll();
-
-          foreach ($result as $data):
-        ?>
-
-        map.addMarker({
-          lat: <?=$data['latitud']?>,
-          lng: <?=$data['longitud']?>,
-          title: '<?=$data['titulo']?>',
-          <?php
-            if($data['categoria'] == 'Bancos'){
-              echo 'icon: imgCuponBancos,';
-            }elseif($data['categoria'] == 'Comidas'){
-              echo 'icon: imgCuponComidas,';
-            }elseif($data['categoria'] == 'Salud'){
-              echo 'icon: imgCuponSalud,';
-            }elseif($data['categoria'] == 'Ferreterias'){
-              echo 'icon: imgCuponFerreterias,';
-            }else{
-              echo 'icon: imgCuponOtros,';
-            }
-          ?>
-          infoWindow: {
-            content: '<h1><?=$data['titulo']?></h1><br><h2><?=$data['nombreEmpresa']?></h2><br><h3><?=$data['categoria']?></h3>'
-          }
-        });
-      
-        <?php endforeach; ?>
-
-        // click: function(e){
-        //   if(console.log)
-        //     console.log(e);
-        //   alert('You clicked in this marker');
-        // },
-        // mouseover: function(e){
-        //   if(console.log)
-        //     console.log(e);
-        // },
-
-
+    function geoFindMe() {
+      if (!navigator.geolocation){
+        console.log('Geolocation is not supported by your browser');
+        return;
       }
+      function success(position) {
+        latitude  = position.coords.latitude;
+        longitude = position.coords.longitude;
+        Cookies.set('lat', position.coords.latitude);
+        Cookies.set('lng', position.coords.longitude);
+        console.log(position);
+      };
+      function error() {
+        console.log('Unable to retrieve your location');
+      };
+      navigator.geolocation.getCurrentPosition(success, error);
+    }
 
-      google.maps.event.addDomListener(window, 'load', initialize);
-      // google.maps.event.addDomListener(window, 'resize', initialize);
-      google.maps.event.addDomListener(window, 'resize', function(){
-        map.setCenter(MyLat, MyLng);
-      });
-
-      $('#findMe').click(function() {
-        initialize();
-      });
-
-    });
+    geoFindMe();
 
   </script>
 </head>
 <body>
+
   <?php include_once('include/navbar.php'); ?>
-  
 
-  <div class="container-fluid" style="margin-top: 60px">
-    <div class="row">
-      
-      <div class="col-md-12">
-
-        <select class="selectpicker" id="" onchange="location = this.value;">
-
-          <?php if(isset($_GET['range']) AND !empty($_GET['range'])): ?>
-            <?php if($_GET['range'] == 0.3): ?>
-              <option selected="selected" disabled="disabled">Distancia (500 mts)</option>
-            <?php elseif($_GET['range'] == 0.6): ?>
-              <option selected="selected" disabled="disabled">Distancia (1 km)</option>
-            <?php elseif($_GET['range'] == 3.1): ?>
-              <option selected="selected" disabled="disabled">Distancia (5 kms)</option>
-            <?php elseif($_GET['range'] == 6.2): ?>
-              <option selected="selected" disabled="disabled">Distancia (10 kms)</option>
-            <?php elseif($_GET['range'] >= 6.3): ?>
-              <option selected="selected" disabled="disabled">Distancia (<?=$_GET['range']?> ml)</option>
-            <?php else: ?>
-              <option selected="selected" disabled="disabled">Distancia (<?=$_GET['range']?> ml)</option>
-            <?php endif; ?>
+  <div class="container" style="margin-top: 60px;">
+    <div class="row" style="padding-left: 4px; padding-top: 4px; padding-bottom: 4px;">
+      <select class="selectpicker" id="range">
+        <!-- onchange="location = this.value;" -->
+        <?php if(isset($_GET['range']) AND !empty($_GET['range'])): ?>
+          <?php if($_GET['range'] == 0.3): ?>
+            <option value="listado.php?cat=<?=$_GET['cat']?>&range=<?=$_GET['range']?>" selected="selected">Distancia (500 mts)</option>
+          <?php elseif($_GET['range'] == 0.6): ?>
+            <option value="listado.php?cat=<?=$_GET['cat']?>&range=<?=$_GET['range']?>" selected="selected">Distancia (1 km)</option>
+          <?php elseif($_GET['range'] == 3.1): ?>
+            <option value="listado.php?cat=<?=$_GET['cat']?>&range=<?=$_GET['range']?>" selected="selected">Distancia (5 kms)</option>
+          <?php elseif($_GET['range'] == 6.2): ?>
+            <option value="listado.php?cat=<?=$_GET['cat']?>&range=<?=$_GET['range']?>" selected="selected">Distancia (10 kms)</option>
+          <?php elseif($_GET['range'] >= 6.3): ?>
+            <option value="listado.php?cat=<?=$_GET['cat']?>&range=<?=$_GET['range']?>" selected="selected">Distancia (<?=$_GET['range']?> ml)</option>
           <?php else: ?>
-            <option selected="selected" disabled="disabled">Distancia (500 mts)</option>
+            <option value="listado.php?cat=<?=$_GET['cat']?>&range=<?=$_GET['range']?>" selected="selected">Distancia (<?=$_GET['range']?> ml)</option>
           <?php endif; ?>
+        <?php else: ?>
+          <option value="listado.php?cat=<?=$_GET['cat']?>&range=0.3" selected="selected">Distancia (500 mts)</option>
+        <?php endif; ?>
+      <?php if(isset($_GET['cat']) AND !empty($_GET['cat'])): ?>
+        <option value="listado.php?cat=<?=$_GET['cat']?>&range=0.3">500 Metros</option>
+        <option value="listado.php?cat=<?=$_GET['cat']?>&range=0.6">1 Kilometro</option>
+        <option value="listado.php?cat=<?=$_GET['cat']?>&range=3.1">5 Kilometros</option>
+        <option value="listado.php?cat=<?=$_GET['cat']?>&range=6.2">10 Kilometros</option>
+      <?php else: ?>
+        <option value="listado.php?cat=%&range=0.3">500 Metros</option>
+        <option value="listado.php?cat=%&range=0.6">1 Kilometro</option>
+        <option value="listado.php?cat=%&range=3.1">5 Kilometros</option>
+        <option value="listado.php?cat=%&range=6.2">10 Kilometros</option>
+      <?php endif; ?>
+      </select>
+      <button class="btn btn-warning" href="#!" id="findMe" onclick="location = $('#range').val();"><span class="glyphicon glyphicon-screenshot"></span></button>
+      <div class="clearfix"></div>
+    </div>
+    <div class="row">
+      <?php
+        $query = $mysql->prepare("SELECT id, titulo, icon, nombreEmpresa, categoria, direccion, latitud, longitud, SQRT(POW(69.1 * (latitud - :lat), 2) + POW(69.1 * (:lng - longitud) * COS(latitud / 57.3), 2)) AS distance FROM sucursales WHERE categoria LIKE :cat HAVING distance < :range");
 
-          <option value="?range=0.3">500 Metros</option>
-          <option value="?range=0.6">1 Kilometro</option>
-          <option value="?range=3.1">5 Kilometros</option>
-          <option value="?range=6.2">10 Kilometros</option>
-        </select>
+        // WHERE categoria = ":cat"
 
-        <button class="btn btn-warning" href="#!" id="findMe">¡CERCA A MI!</button>
+        if(isset($_COOKIE['lat']) AND isset($_COOKIE['lng']) AND isset($_GET['range']) AND !empty($_GET['range']) AND isset($_GET['cat'])){
+          $arrayQuery = array(
+            ':lat' => $_COOKIE['lat'],
+            ':lng' => $_COOKIE['lng'],
+            ':range' => $_GET['range'],
+            ':cat' => $_GET['cat']
+          );
+        }else{
+          $arrayQuery = array(
+            ':lat' => 3.4227857999999998,
+            ':lng' => -76.55079080000002,
+            ':range' => 0.310686,
+            ':cat' => '%'
+          );
+        }
 
-      </div>
+        $query->execute($arrayQuery);
 
+        $result = $query->fetchAll();
+
+        foreach ($result as $data):
+      ?>
+
+        <div class="panel panel-primary" style="border-radius: 0px;">
+          <div class="panel-heading" style="border-radius: 0px;"><?=$data['titulo']?></div>
+          <div class="panel-body">
+            <?php if($data['icon'] != ''){
+              echo "<img src='resources/images/marker/bussiness/".$data['icon']."' class='img img-responsive' />";
+            }else {
+              if($data['categoria'] == 'Bancos'){
+                echo "<img src='resources/images/marker/place-to-stay.png' class='img img-responsive' />";
+              }elseif($data['categoria'] == 'Comidas'){
+                echo "<img src='resources/images/marker/fastfood.png' class='img img-responsive' />";
+              }elseif($data['categoria'] == 'Salud'){
+                echo "<img src='resources/images/marker/farmacia.png' class='img img-responsive' />";
+              }elseif($data['categoria'] == 'Ferreterias'){
+                echo "<img src='resources/images/marker/theme-park.png' class='img img-responsive' />";
+              }else{
+                echo "<img src='resources/images/marker/cupon.png' class='img img-responsive' />";
+              }
+            } ?>
+            <p>
+              Empresa: <?=$data['nombreEmpresa']?>
+            </p>
+            <span class="label label-success"><?=$data['categoria']?></span>
+          </div>
+          <div class="panel-footer" style="border-radius: 0px;">
+            <a class="btn btn-success btn-sm col-xs-12 col-md-12" href="cupon.php?id=<?=$data['id']?>">MAS DETALLES <span class="glyphicon glyphicon-plus"></span></a>
+            <div class="clearfix"></div>
+          </div>
+        </div>
+
+      <?php endforeach; ?>
     </div>
   </div>
-
-  
 
   <script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="bower_components/bootstrap-select/dist/js/bootstrap-select.min.js"></script>

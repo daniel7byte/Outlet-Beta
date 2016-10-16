@@ -104,31 +104,11 @@
           }
         });
 
-        var imgCuponComidas = {
-          url: 'resources/images/marker/fastfood.png',
-        };
-
-        var imgCuponBancos = {
-          url: 'resources/images/marker/place-to-stay.png',
-        };
-
-        var imgCuponSalud = {
-          url: 'resources/images/marker/farmacia.png',
-        };
-
-        var imgCuponFerreterias = {
-          url: 'resources/images/marker/theme-park.png',
-        };
-
-        var imgCuponOtros = {
-          url: 'resources/images/marker/cupon.png',
-        };
-
         <?php
           $query = $mysql->prepare("SELECT id, titulo, icon, nombreEmpresa, categoria, direccion, latitud, longitud, SQRT(POW(69.1 * (latitud - :lat), 2) + POW(69.1 * (:lng - longitud) * COS(latitud / 57.3), 2)) AS distance FROM sucursales WHERE categoria LIKE :cat HAVING distance < :range");
 
           // WHERE categoria = ":cat"
-          
+
           if(isset($_COOKIE['lat']) AND isset($_COOKIE['lng']) AND isset($_GET['range']) AND !empty($_GET['range']) AND isset($_GET['cat'])){
             $arrayQuery = array(
               ':lat' => $_COOKIE['lat'],
@@ -162,15 +142,15 @@
             echo "icon: 'resources/images/marker/bussiness/".$data['icon']."',";
           }else{
             if($data['categoria'] == 'Bancos'){
-              echo 'icon: imgCuponBancos,';
+              echo 'icon: "resources/images/marker/place-to-stay.png",';
             }elseif($data['categoria'] == 'Comidas'){
-              echo 'icon: imgCuponComidas,';
+              echo 'icon: "resources/images/marker/fastfood.png",';
             }elseif($data['categoria'] == 'Salud'){
-              echo 'icon: imgCuponSalud,';
+              echo 'icon: "resources/images/marker/farmacia.png",';
             }elseif($data['categoria'] == 'Ferreterias'){
-              echo 'icon: imgCuponFerreterias,';
+              echo 'icon: "resources/images/marker/theme-park.png",';
             }else{
-              echo 'icon: imgCuponOtros,';
+              echo 'icon: "resources/images/marker/cupon.png",';
             }
           }
           ?>
@@ -178,7 +158,7 @@
             content: '<p><?=$data['titulo']?></p><p><?=$data['nombreEmpresa']?></p><p><?=$data['categoria']?></p><a class="btn btn-success btn-sm" href="cupon.php?id=<?=$data['id']?>">MAS DETALLES</a>'
           }
         });
-      
+
         <?php endforeach; ?>
 
         // click: function(e){
@@ -210,11 +190,11 @@
 </head>
 <body>
   <?php include_once('include/navbar.php'); ?>
-  
+
   <div class="row navOptionsRow">
-    
+
     <div class="col-md-12 navOptionsCol">
-      
+
       <!-- <select class="selectpicker" id="">
         <option selected="selected" disabled="disabled">Distancia (500 mts)</option>
         <option value="0.310686">500 Metros</option>
@@ -266,7 +246,7 @@
   </div>
 
   <div id="map"></div>
-  
+
   <script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="bower_components/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
   <script type="text/javascript">

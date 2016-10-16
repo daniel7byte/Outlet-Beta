@@ -6,7 +6,6 @@
 .navOptions{
 	z-index: 2;
 }
-
-.selectpicker {
-	width: 33%;
+.panel {
+  margin-bottom: 4px;
 }
