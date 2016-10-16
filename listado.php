@@ -20,7 +20,6 @@
   <link rel="stylesheet" type="text/css" href="bower_components/bootstrap-select/dist/css/bootstrap-select.min.css">
   <link rel="stylesheet" type="text/css" href="resources/css/global.css">
   <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
-  <script type="text/javascript" src="bower_components/markerclustererplus/dist/markerclusterer.min.js"></script>
   <script type="text/javascript" src="bower_components/js-cookie/src/js.cookie.js"></script>
   <script type="text/javascript">
     var latitud;
@@ -96,7 +95,7 @@
     </div>
     <div class="row">
       <?php
-        $query = $mysql->prepare("SELECT id, descripcion, titulo, icon, nombreEmpresa, categoria, direccion, latitud, longitud, SQRT(POW(69.1 * (latitud - :lat), 2) + POW(69.1 * (:lng - longitud) * COS(latitud / 57.3), 2)) AS distance FROM sucursales WHERE categoria LIKE :cat HAVING distance < :range ORDER BY distance ASC");
+        $query = $mysql->prepare("SELECT id, descripcion, valorAntes, valorAhora, titulo, icon, nombreEmpresa, categoria, direccion, latitud, longitud, SQRT(POW(69.1 * (latitud - :lat), 2) + POW(69.1 * (:lng - longitud) * COS(latitud / 57.3), 2)) AS distance FROM sucursales WHERE categoria LIKE :cat HAVING distance < :range ORDER BY distance ASC");
 
         // WHERE categoria = ":cat"
 
@@ -145,8 +144,18 @@
               }
             } ?>
             <hr>
-              <span class="label label-primary">Default</span>
+              <label>PROMOCION:</label>
+              <p>
+                <span style="color: #9E9E9E;">
+                  Antes: <s><em><?=$data['valorAntes']?></em></s>
+                </span>
+                <br>
+                <span style="color: #4CAF50; font-size: 30px;">
+                  Ahora: <strong><?=$data['valorAntes']?></strong>
+                </span>
+              </p>
             <hr>
+            <label>DESCRICION:</label>
             <blockquote>
               <p><?=$data['descripcion']?></p>
               <small>Empresa: <cite title="Source Title"><?=$data['nombreEmpresa']?></cite></small>
