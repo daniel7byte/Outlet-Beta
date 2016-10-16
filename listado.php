@@ -88,7 +88,16 @@
         <option value="listado.php?cat=<?=$cat?>&range=3.1">5 Kilometros</option>
         <option value="listado.php?cat=<?=$cat?>&range=6.2">10 Kilometros</option>
       </select>
-      <button class="btn btn-warning" href="#!" id="findMe" onclick="location = $('#range').val();"><span class="glyphicon glyphicon-screenshot"></span></button>
+      <button class="btn btn-warning" id="findMe" onclick="location = $('#range').val();"><span class="glyphicon glyphicon-screenshot"></span></button>
+
+      <?php if(isset($_GET['range']) AND !empty($_GET['range'])): ?>
+        <a class="btn btn-success" href="index.php?cat=<?=$cat?>&range=<?=$_GET['range']?>"><span class="glyphicon glyphicon-globe"></span></a>
+      <?php else: ?>
+        <a class="btn btn-success" href="index.php?cat=<?=$cat?>&range=0.3"><span class="glyphicon glyphicon-globe"></span></a>
+      <?php endif; ?>
+
+      <a class="btn btn-primary" href="categorias.php"><span class="glyphicon glyphicon-search"></span></a>
+
       <div class="clearfix"></div>
 
 

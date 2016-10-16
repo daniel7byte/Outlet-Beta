@@ -31,9 +31,6 @@
     var MyLng;
     var latlngCenter;
 
-    Cookies.remove('lat');
-    Cookies.remove('lng');
-
     $(document).ready(function(){
 
       var styleArray = [{"featureType":"landscape","stylers":[{"hue":"#FFA800"},{"saturation":0},{"lightness":0},{"gamma":1}]},{"featureType":"road.highway","stylers":[{"hue":"#53FF00"},{"saturation":-73},{"lightness":40},{"gamma":1}]},{"featureType":"road.arterial","stylers":[{"hue":"#FBFF00"},{"saturation":0},{"lightness":0},{"gamma":1}]},{"featureType":"road.local","stylers":[{"hue":"#00FFFD"},{"saturation":0},{"lightness":30},{"gamma":1}]},{"featureType":"water","stylers":[{"hue":"#00BFFF"},{"saturation":6},{"lightness":8},{"gamma":1}]},{"featureType":"poi","stylers":[{"hue":"#679714"},{"saturation":33.4},{"lightness":-25.4},{"gamma":1}]}];
@@ -74,6 +71,8 @@
             console.log(position.coords.latitude, position.coords.longitude);
             MyLat = (position.coords.latitude);
             MyLng = (position.coords.longitude);
+            Cookies.remove('lat');
+            Cookies.remove('lng');
             Cookies.set('lat', position.coords.latitude);
             Cookies.set('lng', position.coords.longitude);
 
@@ -120,7 +119,7 @@
             $arrayQuery = array(
               ':lat' => 3.4227857999999998,
               ':lng' => -76.55079080000002,
-              ':range' => 0.310686,
+              ':range' => 0.3,
               ':cat' => '%'
             );
           }
@@ -227,7 +226,16 @@
         <option value="index.php?cat=<?=$cat?>&range=3.1">5 Kilometros</option>
         <option value="index.php?cat=<?=$cat?>&range=6.2">10 Kilometros</option>
       </select>
-      <button class="btn btn-warning" href="#!" id="findMe" onclick="location = $('#range').val();"><span class="glyphicon glyphicon-screenshot"></span></button>
+      <button class="btn btn-warning" id="findMe" onclick="location = $('#range').val();"><span class="glyphicon glyphicon-screenshot"></span></button>
+
+      <?php if(isset($_GET['range']) AND !empty($_GET['range'])): ?>
+        <a class="btn btn-success" href="listado.php?cat=<?=$cat?>&range=<?=$_GET['range']?>"><span class="glyphicon glyphicon-th-list"></span></a>
+      <?php else: ?>
+        <a class="btn btn-success" href="listado.php?cat=<?=$cat?>&range=0.3"><span class="glyphicon glyphicon-th-list"></span></a>
+      <?php endif; ?>
+
+      <a class="btn btn-primary" href="categorias.php"><span class="glyphicon glyphicon-search"></span></a>
+
       <div class="clearfix"></div>
 
     </div>
