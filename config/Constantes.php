@@ -1,7 +1,7 @@
 <?php
 
 // URL Application
-define('HOME_URL', 'http://localhost:8000');
+define('HOME_URL', 'http://localhost:8000/');
 
 // Database
 define('DB_HOST' , 'localhost');
