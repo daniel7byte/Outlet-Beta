@@ -9,3 +9,15 @@
 .panel {
   margin-bottom: 4px;
 }
+blockquote {
+	font-size: 15px;
+}
+
+/* ESTILOS OPCIONALES */
+.selector>button {
+	border-radius: 0px;
+}
+
+.btn {
+	border-radius: 0px;
+}

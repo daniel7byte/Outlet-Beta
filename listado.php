@@ -55,43 +55,48 @@
 
   <div class="container" style="margin-top: 60px;">
     <div class="row" style="padding-left: 4px; padding-top: 4px; padding-bottom: 4px;">
+
+
       <select class="selectpicker" id="range">
         <!-- onchange="location = this.value;" -->
+        <?php
+          if(isset($_GET['cat']) AND !empty($_GET['cat'])){
+            $cat = $_GET['cat'];
+          }else{
+            $cat = '%';
+          }
+        ?>
         <?php if(isset($_GET['range']) AND !empty($_GET['range'])): ?>
           <?php if($_GET['range'] == 0.3): ?>
-            <option value="listado.php?cat=<?=$_GET['cat']?>&range=<?=$_GET['range']?>" selected="selected">Distancia (500 mts)</option>
+            <option value="listado.php?cat=<?=$cat?>&range=<?=$_GET['range']?>" selected="selected">Distancia (500 mts)</option>
           <?php elseif($_GET['range'] == 0.6): ?>
-            <option value="listado.php?cat=<?=$_GET['cat']?>&range=<?=$_GET['range']?>" selected="selected">Distancia (1 km)</option>
+            <option value="listado.php?cat=<?=$cat?>&range=<?=$_GET['range']?>" selected="selected">Distancia (1 km)</option>
           <?php elseif($_GET['range'] == 3.1): ?>
-            <option value="listado.php?cat=<?=$_GET['cat']?>&range=<?=$_GET['range']?>" selected="selected">Distancia (5 kms)</option>
+            <option value="listado.php?cat=<?=$cat?>&range=<?=$_GET['range']?>" selected="selected">Distancia (5 kms)</option>
           <?php elseif($_GET['range'] == 6.2): ?>
-            <option value="listado.php?cat=<?=$_GET['cat']?>&range=<?=$_GET['range']?>" selected="selected">Distancia (10 kms)</option>
+            <option value="listado.php?cat=<?=$cat?>&range=<?=$_GET['range']?>" selected="selected">Distancia (10 kms)</option>
           <?php elseif($_GET['range'] >= 6.3): ?>
-            <option value="listado.php?cat=<?=$_GET['cat']?>&range=<?=$_GET['range']?>" selected="selected">Distancia (<?=$_GET['range']?> ml)</option>
+            <option value="listado.php?cat=<?=$cat?>&range=<?=$_GET['range']?>" selected="selected">Distancia (<?=$_GET['range']?> ml)</option>
           <?php else: ?>
-            <option value="listado.php?cat=<?=$_GET['cat']?>&range=<?=$_GET['range']?>" selected="selected">Distancia (<?=$_GET['range']?> ml)</option>
+            <option value="listado.php?cat=<?=$cat?>&range=<?=$_GET['range']?>" selected="selected">Distancia (<?=$_GET['range']?> ml)</option>
           <?php endif; ?>
         <?php else: ?>
-          <option value="listado.php?cat=<?=$_GET['cat']?>&range=0.3" selected="selected">Distancia (500 mts)</option>
+          <option value="listado.php?cat=<?=$cat?>&range=0.3" selected="selected">Distancia (500 mts)</option>
         <?php endif; ?>
-      <?php if(isset($_GET['cat']) AND !empty($_GET['cat'])): ?>
-        <option value="listado.php?cat=<?=$_GET['cat']?>&range=0.3">500 Metros</option>
-        <option value="listado.php?cat=<?=$_GET['cat']?>&range=0.6">1 Kilometro</option>
-        <option value="listado.php?cat=<?=$_GET['cat']?>&range=3.1">5 Kilometros</option>
-        <option value="listado.php?cat=<?=$_GET['cat']?>&range=6.2">10 Kilometros</option>
-      <?php else: ?>
-        <option value="listado.php?cat=%&range=0.3">500 Metros</option>
-        <option value="listado.php?cat=%&range=0.6">1 Kilometro</option>
-        <option value="listado.php?cat=%&range=3.1">5 Kilometros</option>
-        <option value="listado.php?cat=%&range=6.2">10 Kilometros</option>
-      <?php endif; ?>
+        <option  data-divider="true"></option>
+        <option value="listado.php?cat=<?=$cat?>&range=0.3">500 Metros</option>
+        <option value="listado.php?cat=<?=$cat?>&range=0.6">1 Kilometro</option>
+        <option value="listado.php?cat=<?=$cat?>&range=3.1">5 Kilometros</option>
+        <option value="listado.php?cat=<?=$cat?>&range=6.2">10 Kilometros</option>
       </select>
       <button class="btn btn-warning" href="#!" id="findMe" onclick="location = $('#range').val();"><span class="glyphicon glyphicon-screenshot"></span></button>
       <div class="clearfix"></div>
+
+
     </div>
     <div class="row">
       <?php
-        $query = $mysql->prepare("SELECT id, titulo, icon, nombreEmpresa, categoria, direccion, latitud, longitud, SQRT(POW(69.1 * (latitud - :lat), 2) + POW(69.1 * (:lng - longitud) * COS(latitud / 57.3), 2)) AS distance FROM sucursales WHERE categoria LIKE :cat HAVING distance < :range");
+        $query = $mysql->prepare("SELECT id, descripcion, titulo, icon, nombreEmpresa, categoria, direccion, latitud, longitud, SQRT(POW(69.1 * (latitud - :lat), 2) + POW(69.1 * (:lng - longitud) * COS(latitud / 57.3), 2)) AS distance FROM sucursales WHERE categoria LIKE :cat HAVING distance < :range ORDER BY distance ASC");
 
         // WHERE categoria = ":cat"
 
@@ -119,7 +124,10 @@
       ?>
 
         <div class="panel panel-primary" style="border-radius: 0px;">
-          <div class="panel-heading" style="border-radius: 0px;"><?=$data['titulo']?></div>
+          <div class="panel-heading" style="border-radius: 0px;">
+            <?=$data['titulo']?> | <span class="badge"><?=$data['categoria']?></span>
+            <!-- <span class="label label-info"><?#=$data['categoria']?></span> -->
+          </div>
           <div class="panel-body">
             <?php if($data['icon'] != ''){
               echo "<img src='resources/images/marker/bussiness/".$data['icon']."' class='img img-responsive' />";
@@ -136,10 +144,13 @@
                 echo "<img src='resources/images/marker/cupon.png' class='img img-responsive' />";
               }
             } ?>
-            <p>
-              Empresa: <?=$data['nombreEmpresa']?>
-            </p>
-            <span class="label label-success"><?=$data['categoria']?></span>
+            <hr>
+              <span class="label label-primary">Default</span>
+            <hr>
+            <blockquote>
+              <p><?=$data['descripcion']?></p>
+              <small>Empresa: <cite title="Source Title"><?=$data['nombreEmpresa']?></cite></small>
+            </blockquote>
           </div>
           <div class="panel-footer" style="border-radius: 0px;">
             <a class="btn btn-success btn-sm col-xs-12 col-md-12" href="cupon.php?id=<?=$data['id']?>">MAS DETALLES <span class="glyphicon glyphicon-plus"></span></a>

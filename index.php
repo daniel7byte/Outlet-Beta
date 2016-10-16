@@ -197,34 +197,35 @@
 
       <select class="selectpicker" id="range">
         <!-- onchange="location = this.value;" -->
+        <?php
+          if(isset($_GET['cat']) AND !empty($_GET['cat'])){
+            $cat = $_GET['cat'];
+          }else{
+            $cat = '%';
+          }
+        ?>
         <?php if(isset($_GET['range']) AND !empty($_GET['range'])): ?>
           <?php if($_GET['range'] == 0.3): ?>
-            <option value="index.php?cat=<?=$_GET['cat']?>&range=<?=$_GET['range']?>" selected="selected">Distancia (500 mts)</option>
+            <option value="index.php?cat=<?=$cat?>&range=<?=$_GET['range']?>" selected="selected">Distancia (500 mts)</option>
           <?php elseif($_GET['range'] == 0.6): ?>
-            <option value="index.php?cat=<?=$_GET['cat']?>&range=<?=$_GET['range']?>" selected="selected">Distancia (1 km)</option>
+            <option value="index.php?cat=<?=$cat?>&range=<?=$_GET['range']?>" selected="selected">Distancia (1 km)</option>
           <?php elseif($_GET['range'] == 3.1): ?>
-            <option value="index.php?cat=<?=$_GET['cat']?>&range=<?=$_GET['range']?>" selected="selected">Distancia (5 kms)</option>
+            <option value="index.php?cat=<?=$cat?>&range=<?=$_GET['range']?>" selected="selected">Distancia (5 kms)</option>
           <?php elseif($_GET['range'] == 6.2): ?>
-            <option value="index.php?cat=<?=$_GET['cat']?>&range=<?=$_GET['range']?>" selected="selected">Distancia (10 kms)</option>
+            <option value="index.php?cat=<?=$cat?>&range=<?=$_GET['range']?>" selected="selected">Distancia (10 kms)</option>
           <?php elseif($_GET['range'] >= 6.3): ?>
-            <option value="index.php?cat=<?=$_GET['cat']?>&range=<?=$_GET['range']?>" selected="selected">Distancia (<?=$_GET['range']?> ml)</option>
+            <option value="index.php?cat=<?=$cat?>&range=<?=$_GET['range']?>" selected="selected">Distancia (<?=$_GET['range']?> ml)</option>
           <?php else: ?>
-            <option value="index.php?cat=<?=$_GET['cat']?>&range=<?=$_GET['range']?>" selected="selected">Distancia (<?=$_GET['range']?> ml)</option>
+            <option value="index.php?cat=<?=$cat?>&range=<?=$_GET['range']?>" selected="selected">Distancia (<?=$_GET['range']?> ml)</option>
           <?php endif; ?>
         <?php else: ?>
-          <option value="index.php?cat=<?=$_GET['cat']?>&range=0.3" selected="selected">Distancia (500 mts)</option>
+          <option value="index.php?cat=<?=$cat?>&range=0.3" selected="selected">Distancia (500 mts)</option>
         <?php endif; ?>
-      <?php if(isset($_GET['cat']) AND !empty($_GET['cat'])): ?>
-        <option value="index.php?cat=<?=$_GET['cat']?>&range=0.3">500 Metros</option>
-        <option value="index.php?cat=<?=$_GET['cat']?>&range=0.6">1 Kilometro</option>
-        <option value="index.php?cat=<?=$_GET['cat']?>&range=3.1">5 Kilometros</option>
-        <option value="index.php?cat=<?=$_GET['cat']?>&range=6.2">10 Kilometros</option>
-      <?php else: ?>
-        <option value="index.php?cat=%&range=0.3">500 Metros</option>
-        <option value="index.php?cat=%&range=0.6">1 Kilometro</option>
-        <option value="index.php?cat=%&range=3.1">5 Kilometros</option>
-        <option value="index.php?cat=%&range=6.2">10 Kilometros</option>
-      <?php endif; ?>
+        <option  data-divider="true"></option>
+        <option value="index.php?cat=<?=$cat?>&range=0.3">500 Metros</option>
+        <option value="index.php?cat=<?=$cat?>&range=0.6">1 Kilometro</option>
+        <option value="index.php?cat=<?=$cat?>&range=3.1">5 Kilometros</option>
+        <option value="index.php?cat=<?=$cat?>&range=6.2">10 Kilometros</option>
       </select>
       <button class="btn btn-warning" href="#!" id="findMe" onclick="location = $('#range').val();"><span class="glyphicon glyphicon-screenshot"></span></button>
       <div class="clearfix"></div>
