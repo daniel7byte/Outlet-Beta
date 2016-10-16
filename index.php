@@ -45,9 +45,9 @@
           lng: -76.53333,
           zoom: 16,
           styles: styleArray,
-          markerClusterer: function(map) {
-            return new MarkerClusterer(map);
-          },
+          // markerClusterer: function(map) {
+          //   return new MarkerClusterer(map);
+          // },
           mapTypeControl: true,
           mapTypeControlOptions: {
             style: google.maps.MapTypeControlStyle.BOTTOM_LEFT,
@@ -125,7 +125,7 @@
         };
 
         <?php
-          $query = $mysql->prepare("SELECT id, titulo, nombreEmpresa, categoria, direccion, latitud, longitud, SQRT(POW(69.1 * (latitud - :lat), 2) + POW(69.1 * (:lng - longitud) * COS(latitud / 57.3), 2)) AS distance FROM sucursales WHERE categoria LIKE :cat HAVING distance < :range");
+          $query = $mysql->prepare("SELECT id, titulo, icon, nombreEmpresa, categoria, direccion, latitud, longitud, SQRT(POW(69.1 * (latitud - :lat), 2) + POW(69.1 * (:lng - longitud) * COS(latitud / 57.3), 2)) AS distance FROM sucursales WHERE categoria LIKE :cat HAVING distance < :range");
 
           // WHERE categoria = ":cat"
           
@@ -157,6 +157,10 @@
           lng: <?=$data['longitud']?>,
           title: '<?=$data['titulo']?>',
           <?php
+
+          if($data['icon'] != ''){
+            echo "icon: 'resources/images/marker/bussiness/".$data['icon']."',";
+          }else{
             if($data['categoria'] == 'Bancos'){
               echo 'icon: imgCuponBancos,';
             }elseif($data['categoria'] == 'Comidas'){
@@ -168,6 +172,7 @@
             }else{
               echo 'icon: imgCuponOtros,';
             }
+          }
           ?>
           infoWindow: {
             content: '<p><?=$data['titulo']?></p><p><?=$data['nombreEmpresa']?></p><p><?=$data['categoria']?></p><a class="btn btn-success btn-sm" href="cupon.php?id=<?=$data['id']?>">MAS DETALLES</a>'
